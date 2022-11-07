@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Code.Scripts.Controllers
@@ -9,6 +10,7 @@ namespace Assets.Code.Scripts.Controllers
 
         [SerializeField] float _speed = 10f;
         [SerializeField] int _lives = 1;
+        [SerializeField] float _shieldDuration = 5f;
 
         [SerializeField] GameObject _laser;
         [SerializeField] float _laserVerticalOffset = 1.0f;
@@ -16,6 +18,7 @@ namespace Assets.Code.Scripts.Controllers
 
         private float _whenCanFire = -1f;
         private Action _onPlayerDeath;
+        private bool _isShieldActive = false;
 
         private const string ENEMY_TAG = "Enemy";
 
@@ -46,7 +49,7 @@ namespace Assets.Code.Scripts.Controllers
             transform.position = new Vector2(horizontalClamp, verticalClamp);
         }
 
-        public void OnFire()
+        public void FireLaser()
         {
             if (Time.time < _whenCanFire)
             {
@@ -59,15 +62,19 @@ namespace Assets.Code.Scripts.Controllers
             Instantiate(_laser, transform.position + laserOffset, Quaternion.identity);
         }
 
-        public void TakeDamage()
+        public void ActivateShield()
         {
-            _lives--;
+            _spriteRenderer.color = Color.red;
+            _isShieldActive = true;
+            StartCoroutine(DeactivateShieldAfter(_shieldDuration));
+        }
 
-            if (_lives <= 0)
-            {
-                Destroy(gameObject);
-                _onPlayerDeath.Invoke();
-            }
+        IEnumerator DeactivateShieldAfter(float seconds)
+        {
+            yield return new WaitForSecondsRealtime(seconds);
+
+            _spriteRenderer.color = Color.white;
+            _isShieldActive = false;
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -75,6 +82,19 @@ namespace Assets.Code.Scripts.Controllers
             if (collision.CompareTag(ENEMY_TAG))
             {
                 TakeDamage();
+            }
+        }
+
+        public void TakeDamage()
+        {
+            if (_isShieldActive) return;
+
+            _lives--;
+
+            if (_lives <= 0)
+            {
+                Destroy(gameObject);
+                _onPlayerDeath.Invoke();
             }
         }
     }

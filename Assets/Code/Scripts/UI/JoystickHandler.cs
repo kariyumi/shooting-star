@@ -38,8 +38,8 @@ namespace Assets.Code.Scripts.UI
                 }
 
                 _joystick.rectTransform.anchoredPosition = new Vector2(
-                    _inputPosition.x * _joystickBackground.rectTransform.sizeDelta.x / 4,
-                    _inputPosition.y * _joystickBackground.rectTransform.sizeDelta.y / 4);
+                    _inputPosition.x * _joystickBackground.rectTransform.sizeDelta.x / 2,
+                    _inputPosition.y * _joystickBackground.rectTransform.sizeDelta.y / 2);
             }
         }
 

@@ -10,10 +10,10 @@ namespace Assets.Code.Scripts.UI
         [SerializeField] Button _fireButton;
         [SerializeField] Button _shieldButton;
 
-        public void Initialize(Action onFireButtonClickedEvent, Action<float, float> onJoystickInput)
+        public void Initialize(Action onFireButtonClickedEvent, Action onShieldButtonEvent, Action<float, float> onJoystickInput)
         {
             _fireButton.onClick.AddListener(onFireButtonClickedEvent.Invoke);
-            //_shieldButton.onClick.AddListener(onShieldButtonEvent.Invoke);
+            _shieldButton.onClick.AddListener(onShieldButtonEvent.Invoke);
             _joystickHandler.Initialize(onJoystickInput);
         }
 
