@@ -6,23 +6,16 @@ namespace Assets.Code.Scripts.Controllers
     {
         [SerializeField] JoystickHandler _joystickHandler;
         [SerializeField] SpriteRenderer _spriteRenderer;
+        [SerializeField] float _speed = 10f;
+        [SerializeField] GameObject _laser;
+        [SerializeField] float _laserVerticalOffset = 1.0f;
 
-        public float Speed = 10f;
-
-        void Update()
+        public void MovePlayer(float horizontalInput, float verticalInput)
         {
-            MovePlayer();
-            BoundariesClamp();
-        }
-
-        private void MovePlayer()
-        {
-            float horizontalInput = _joystickHandler.GetHorizontalInput();
-            float verticalInput = _joystickHandler.GetVerticalInput();
-
             Vector2 directionInput = new Vector2(horizontalInput, verticalInput);
 
-            transform.Translate(directionInput * Speed * Time.deltaTime);
+            transform.Translate(_speed * Time.deltaTime * directionInput);
+            BoundariesClamp();
         }
 
         private void BoundariesClamp()
@@ -37,6 +30,12 @@ namespace Assets.Code.Scripts.Controllers
             float verticalClamp = Mathf.Clamp(transform.position.y, -verticalLimit, verticalLimit);
 
             transform.position = new Vector2(horizontalClamp, verticalClamp);
+        }
+
+        public void OnFire()
+        {
+            Vector3 laserOffset = new Vector2(0, _laserVerticalOffset);
+            Instantiate(_laser, transform.position + laserOffset, Quaternion.identity);
         }
     }
 }
