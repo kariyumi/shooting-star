@@ -27,6 +27,11 @@ namespace Assets.Code.Scripts.Controllers
             _onPlayerDeath = onPlayerDeath;
         }
 
+        public void OnGameStart()
+        {
+            gameObject.SetActive(true);
+        }
+
         public void MovePlayer(float horizontalInput, float verticalInput)
         {
             Vector2 directionInput = new Vector2(horizontalInput, verticalInput);
@@ -93,7 +98,7 @@ namespace Assets.Code.Scripts.Controllers
 
             if (_lives <= 0)
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
                 _onPlayerDeath.Invoke();
             }
         }

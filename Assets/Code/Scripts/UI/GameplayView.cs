@@ -12,7 +12,7 @@ namespace Assets.Code.Scripts.UI
         [SerializeField] Button _shieldButton;
         [SerializeField] TMP_Text _scoreText;
 
-        private int _score = 0;
+        public int Score { get; private set; }
 
         public void Initialize(Action onFireButtonClickedEvent, Action onShieldButtonEvent, Action<float, float> onJoystickInput)
         {
@@ -22,10 +22,15 @@ namespace Assets.Code.Scripts.UI
             _scoreText.text = "Score: " + 0;
         }
 
+        public void OnGameStart()
+        {
+            Score = 0;
+        }
+
         public void UpdateScore(int points)
         {
-            _score += points;
-            _scoreText.text = "Score: " + _score;
+            Score += points;
+            _scoreText.text = "Score: " + Score;
         }
 
         public void Terminate()

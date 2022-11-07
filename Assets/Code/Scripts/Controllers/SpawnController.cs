@@ -18,10 +18,14 @@ namespace Assets.Code.Scripts.Controllers
         public void Initialize(Action<int> onEnemyDespawn)
         {
             _onEnemyDespawn = onEnemyDespawn;
+        }
+
+        public void OnStartGame()
+        {
             StartCoroutine(SpawnCorroutine());
         }
 
-        public void OnEndGame()
+        public void OnGameOver()
         {
             StopAllCoroutines();
         }
