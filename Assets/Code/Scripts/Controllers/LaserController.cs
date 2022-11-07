@@ -1,16 +1,29 @@
 using UnityEngine;
 
-public class LaserController : MonoBehaviour
+namespace Assets.Code.Scripts.Controllers
 {
-    public float Speed = 6f;
-
-    private void Update()
+    public class LaserController : MonoBehaviour
     {
-        transform.Translate(Speed * Time.deltaTime * Vector3.up);
+        public float Speed = 6f;
 
-        if (transform.position.y >= Camera.main.orthographicSize)
+        private const string ENEMY_TAG = "Enemy";
+
+        private void Update()
         {
-            Destroy(gameObject);
+            transform.Translate(Speed * Time.deltaTime * Vector3.up);
+
+            if (transform.position.y >= Camera.main.orthographicSize)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.CompareTag(ENEMY_TAG))
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

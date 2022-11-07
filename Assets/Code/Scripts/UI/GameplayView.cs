@@ -2,22 +2,25 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameplayView : MonoBehaviour
+namespace Assets.Code.Scripts.UI
 {
-    [SerializeField] JoystickHandler _joystickHandler;
-    [SerializeField] Button _fireButton;
-    [SerializeField] Button _multipleFireButton;
-
-    public void Initialize(Action onFireButtonClickedEvent, Action<float, float> onJoystickInput)
+    public class GameplayView : MonoBehaviour
     {
-        _fireButton.onClick.AddListener(onFireButtonClickedEvent.Invoke);
-        //_multipleFireButton.onClick.AddListener(onMultipleFireButtonEvent.Invoke);
-        _joystickHandler.Initialize(onJoystickInput);
-    }
+        [SerializeField] JoystickHandler _joystickHandler;
+        [SerializeField] Button _fireButton;
+        [SerializeField] Button _shieldButton;
 
-    public void Terminate()
-    {
-        _fireButton.onClick.RemoveAllListeners();
-        _multipleFireButton.onClick.RemoveAllListeners();
+        public void Initialize(Action onFireButtonClickedEvent, Action<float, float> onJoystickInput)
+        {
+            _fireButton.onClick.AddListener(onFireButtonClickedEvent.Invoke);
+            //_shieldButton.onClick.AddListener(onShieldButtonEvent.Invoke);
+            _joystickHandler.Initialize(onJoystickInput);
+        }
+
+        public void Terminate()
+        {
+            _fireButton.onClick.RemoveAllListeners();
+            _shieldButton.onClick.RemoveAllListeners();
+        }
     }
 }

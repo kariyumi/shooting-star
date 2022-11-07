@@ -1,14 +1,28 @@
+using System;
 using UnityEngine;
 
 namespace Assets.Code.Scripts.Controllers
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] JoystickHandler _joystickHandler;
         [SerializeField] SpriteRenderer _spriteRenderer;
+
         [SerializeField] float _speed = 10f;
+        [SerializeField] int _lives = 1;
+
         [SerializeField] GameObject _laser;
         [SerializeField] float _laserVerticalOffset = 1.0f;
+        [SerializeField] float _fireRate = 0.3f;
+
+        private float _whenCanFire = -1f;
+        private Action _onPlayerDeath;
+
+        private const string ENEMY_TAG = "Enemy";
+
+        public void Initialize(Action onPlayerDeath)
+        {
+            _onPlayerDeath = onPlayerDeath;
+        }
 
         public void MovePlayer(float horizontalInput, float verticalInput)
         {
@@ -34,8 +48,34 @@ namespace Assets.Code.Scripts.Controllers
 
         public void OnFire()
         {
+            if (Time.time < _whenCanFire)
+            {
+                return;
+            }
+            
+            _whenCanFire = Time.time + _fireRate;
+            
             Vector3 laserOffset = new Vector2(0, _laserVerticalOffset);
             Instantiate(_laser, transform.position + laserOffset, Quaternion.identity);
+        }
+
+        public void TakeDamage()
+        {
+            _lives--;
+
+            if (_lives <= 0)
+            {
+                Destroy(gameObject);
+                _onPlayerDeath.Invoke();
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.CompareTag(ENEMY_TAG))
+            {
+                TakeDamage();
+            }
         }
     }
 }
