@@ -12,15 +12,18 @@ namespace Assets.Code.Scripts.Controllers
         [SerializeField] GameplayView _gameplayView;
         [SerializeField] MainMenuView _mainMenuView;
         [SerializeField] GameOverMenuView _gameOverMenuView;
+        [SerializeField] StarGarageView _starGarageView;
 
         [SerializeField] CurrencyModel _currencyModel;
         [SerializeField] ScoreModel _scoreModel;
+        [SerializeField] ShieldModel _shieldModel;
 
         private void Awake()
         {
             _gameplayView.Initialize(_playerController.FireLaser, _playerController.ActivateShield, _playerController.MovePlayer);
             _mainMenuView.Initialize(StartGame, Garage, Leaderboard);
             _gameOverMenuView.Initialize(StartGame, Garage, Leaderboard);
+            _starGarageView.Initialize(BuySoftCurrency, BuyHardCurrency, BuyShield, AccelerateShield, MainMenu);
 
             _enemySpawnController.Initialize(UpdateScore);
             _starSpawnController.Initialize(UpdateSoftCurrency);
@@ -28,6 +31,7 @@ namespace Assets.Code.Scripts.Controllers
 
             _scoreModel.Initialize();
             _currencyModel.Initialize();
+            _shieldModel.Initialize();
 
             MainMenu();
         }
@@ -37,6 +41,7 @@ namespace Assets.Code.Scripts.Controllers
             _mainMenuView.gameObject.SetActive(false);
             _gameplayView.gameObject.SetActive(true);
             _gameOverMenuView.gameObject.SetActive(false);
+            _starGarageView.gameObject.SetActive(false);
 
             _enemySpawnController.OnStartGame();
             _starSpawnController.OnStartGame();
@@ -54,6 +59,7 @@ namespace Assets.Code.Scripts.Controllers
             _gameOverMenuView.gameObject.SetActive(true);
             _mainMenuView.gameObject.SetActive(false);
             _gameplayView.gameObject.SetActive(false);
+            _starGarageView.gameObject.SetActive(false);
         }
 
         private void MainMenu()
@@ -61,11 +67,22 @@ namespace Assets.Code.Scripts.Controllers
             _mainMenuView.gameObject.SetActive(true);
             _gameplayView.gameObject.SetActive(false);
             _gameOverMenuView.gameObject.SetActive(false);
+            _starGarageView.gameObject.SetActive(false);
         }
 
         private void Garage()
         {
+            _mainMenuView.gameObject.SetActive(false);
+            _gameplayView.gameObject.SetActive(false);
+            _gameOverMenuView.gameObject.SetActive(false);
+            _starGarageView.gameObject.SetActive(true);
 
+            _starGarageView.OnActive(
+                _currencyModel.SoftCurrencyCounter,
+                _currencyModel.HardCurrencyCounter,
+                _shieldModel.ShieldCounter,
+                _shieldModel.Timer
+                );
         }
 
         private void Leaderboard()
@@ -84,5 +101,46 @@ namespace Assets.Code.Scripts.Controllers
             _currencyModel.UpdateSoftCurrency(value);
             _gameplayView.UpdateSoftCurrency(_currencyModel.SoftCurrencyCounter);
         }
+
+        private void BuySoftCurrency()
+        {
+            _currencyModel.UpdateSoftCurrency(10);
+            _starGarageView.UpdateSoftCurrecy(_currencyModel.SoftCurrencyCounter);
+        }
+
+        private void BuyHardCurrency()
+        {
+            _currencyModel.UpdateHardCurrency(10);
+            _starGarageView.UpdateHardCurrecy(_currencyModel.HardCurrencyCounter);
+        }
+
+        public void BuyShield()
+        {
+            if (_currencyModel.SoftCurrencyCounter / _shieldModel.ShieldPrice < 1)
+            {
+                return;
+            }
+
+            _currencyModel.UpdateSoftCurrency(-_shieldModel.ShieldPrice);
+            _shieldModel.OnBuyShield();
+
+            _starGarageView.OnBuyShield(_currencyModel.SoftCurrencyCounter, _shieldModel.Timer);
+        }
+
+        public void AccelerateShield()
+        {
+            if (_currencyModel.HardCurrencyCounter / _shieldModel.AccelerationPrice < 1 ||
+                _shieldModel.Timer == System.TimeSpan.Zero)
+            {
+                return;
+            }
+
+            _currencyModel.UpdateHardCurrency(-_shieldModel.AccelerationPrice);
+            _shieldModel.OnBuyAcceleration();
+
+            _starGarageView.OnAccelerateShield(_currencyModel.HardCurrencyCounter, _shieldModel.Timer);
+        }
+
+
     }
 }
