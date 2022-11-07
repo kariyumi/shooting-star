@@ -552,6 +552,7 @@ MonoBehaviour:
   _joystickHandler: {fileID: 2000786110}
   _fireButton: {fileID: 1142869620}
   _shieldButton: {fileID: 175432148}
+  _scoreText: {fileID: 732936475}
 --- !u!1 &732936473
 GameObject:
   m_ObjectHideFlags: 0

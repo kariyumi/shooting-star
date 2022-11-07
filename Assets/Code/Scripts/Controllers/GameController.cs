@@ -13,6 +13,7 @@ namespace Assets.Code.Scripts.Controllers
         private void Start()
         {
             _gameplayView.Initialize(_playerController.FireLaser, _playerController.ActivateShield, _playerController.MovePlayer);
+            _spawnController.Initialize(_gameplayView.UpdateScore);
             _playerController.Initialize(EndGame);
         }
 

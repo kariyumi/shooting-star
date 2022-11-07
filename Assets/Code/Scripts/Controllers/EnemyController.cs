@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Assets.Code.Scripts.Controllers
@@ -6,6 +7,7 @@ namespace Assets.Code.Scripts.Controllers
     {
         [SerializeField] SpriteRenderer _spriteRenderer;
         [SerializeField] float _speed = 4.6f;
+        [SerializeField] int _points = 100;
 
         private float enemyHalfWidth;
         private float enemyHalfHeight;
@@ -14,6 +16,8 @@ namespace Assets.Code.Scripts.Controllers
 
         const string PLAYER_TAG = "Player";
         const string LASER_TAG = "Laser";
+
+        public Action<int> OnEnemyDespawn;
 
         private void Start()
         {
@@ -35,7 +39,7 @@ namespace Assets.Code.Scripts.Controllers
 
         private void Respawn()
         {
-            float randomHorizontalSpawnPosition = Random.Range(-horizontalLimit, horizontalLimit);
+            float randomHorizontalSpawnPosition = UnityEngine.Random.Range(-horizontalLimit, horizontalLimit);
             float verticalSpawnPosition = verticalLimit + enemyHalfHeight;
 
             transform.position = new Vector2(randomHorizontalSpawnPosition, verticalSpawnPosition);
@@ -45,6 +49,7 @@ namespace Assets.Code.Scripts.Controllers
         {
             if (collision.CompareTag(PLAYER_TAG) || collision.CompareTag(LASER_TAG))
             {
+                OnEnemyDespawn.Invoke(_points);
                 Destroy(gameObject);
             }
         }

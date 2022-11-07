@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -12,13 +13,14 @@ namespace Assets.Code.Scripts.Controllers
         private float _ySpawn = -8f;
         private float _spawnRate = 5f;
 
-        // Start is called before the first frame update
-        private void Start()
+        private Action<int> _onEnemyDespawn;
+
+        public void Initialize(Action<int> onEnemyDespawn)
         {
+            _onEnemyDespawn = onEnemyDespawn;
             StartCoroutine(SpawnCorroutine());
         }
 
-        // Update is called once per frame
         public void OnEndGame()
         {
             StopAllCoroutines();
@@ -28,9 +30,10 @@ namespace Assets.Code.Scripts.Controllers
         {
             while (true)
             {
-                float randomXSpawn = Random.Range(-_xSpawnRange, _xSpawnRange);
+                float randomXSpawn = UnityEngine.Random.Range(-_xSpawnRange, _xSpawnRange);
                 GameObject enemy = Instantiate(_enemyPrefab, new Vector2(randomXSpawn, _ySpawn), Quaternion.identity);
                 enemy.transform.parent = _enemyContainer.transform;
+                enemy.GetComponent<EnemyController>().OnEnemyDespawn = _onEnemyDespawn;
 
                 yield return new WaitForSeconds(_spawnRate);
             }
