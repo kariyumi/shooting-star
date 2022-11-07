@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Code.Scripts.UI
+namespace Assets.Code.Scripts.Views
 {
     public class GameplayView : MonoBehaviour
     {
@@ -11,26 +11,28 @@ namespace Assets.Code.Scripts.UI
         [SerializeField] Button _fireButton;
         [SerializeField] Button _shieldButton;
         [SerializeField] TMP_Text _scoreText;
-
-        public int Score { get; private set; }
+        [SerializeField] TMP_Text _starCounterText;
 
         public void Initialize(Action onFireButtonClickedEvent, Action onShieldButtonEvent, Action<float, float> onJoystickInput)
         {
             _fireButton.onClick.AddListener(onFireButtonClickedEvent.Invoke);
             _shieldButton.onClick.AddListener(onShieldButtonEvent.Invoke);
             _joystickHandler.Initialize(onJoystickInput);
-            _scoreText.text = "Score: " + 0;
         }
 
         public void OnGameStart()
         {
-            Score = 0;
+            UpdateScore(0);
         }
 
-        public void UpdateScore(int points)
+        public void UpdateScore(int score)
         {
-            Score += points;
-            _scoreText.text = "Score: " + Score;
+            _scoreText.text = "Score: " + score;
+        }
+
+        public void UpdateSoftCurrency(int value)
+        {
+            _starCounterText.text = value.ToString();
         }
 
         public void Terminate()

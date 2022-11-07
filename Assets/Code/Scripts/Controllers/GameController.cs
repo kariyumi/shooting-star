@@ -1,4 +1,4 @@
-using Assets.Code.Scripts.UI;
+using Assets.Code.Scripts.Views;
 using UnityEngine;
 
 namespace Assets.Code.Scripts.Controllers
@@ -6,11 +6,15 @@ namespace Assets.Code.Scripts.Controllers
     public class GameController : MonoBehaviour
     {
         [SerializeField] PlayerController _playerController;
-        [SerializeField] SpawnController _spawnController;
+        [SerializeField] EnemySpawnController _enemySpawnController;
+        [SerializeField] StarSpawnController _starSpawnController;
 
         [SerializeField] GameplayView _gameplayView;
         [SerializeField] MainMenuView _mainMenuView;
         [SerializeField] GameOverMenuView _gameOverMenuView;
+
+        [SerializeField] CurrencyModel _currencyModel;
+        [SerializeField] ScoreModel _scoreModel;
 
         private void Awake()
         {
@@ -18,8 +22,12 @@ namespace Assets.Code.Scripts.Controllers
             _mainMenuView.Initialize(StartGame, Garage, Leaderboard);
             _gameOverMenuView.Initialize(StartGame, Garage, Leaderboard);
 
-            _spawnController.Initialize(_gameplayView.UpdateScore);
+            _enemySpawnController.Initialize(UpdateScore);
+            _starSpawnController.Initialize(UpdateSoftCurrency);
             _playerController.Initialize(EndGame);
+
+            _scoreModel.Initialize();
+            _currencyModel.Initialize();
 
             MainMenu();
         }
@@ -30,15 +38,18 @@ namespace Assets.Code.Scripts.Controllers
             _gameplayView.gameObject.SetActive(true);
             _gameOverMenuView.gameObject.SetActive(false);
 
-            _spawnController.OnStartGame();
+            _enemySpawnController.OnStartGame();
+            _starSpawnController.OnStartGame();
             _playerController.OnGameStart();
             _gameplayView.OnGameStart();
         }
 
         private void EndGame()
         {
-            _spawnController.OnGameOver();
-            _gameOverMenuView.OnGameOver(_gameplayView.Score);
+            _enemySpawnController.OnGameOver();
+            _starSpawnController.OnGameOver();
+            _gameOverMenuView.OnGameOver(_scoreModel.Score);
+            _scoreModel.ClearScore();
 
             _gameOverMenuView.gameObject.SetActive(true);
             _mainMenuView.gameObject.SetActive(false);
@@ -62,6 +73,16 @@ namespace Assets.Code.Scripts.Controllers
 
         }
 
-        
+        private void UpdateScore(int value)
+        {
+            _scoreModel.UpdateScore(value);
+            _gameplayView.UpdateScore(_scoreModel.Score);
+        }
+
+        private void UpdateSoftCurrency(int value)
+        {
+            _currencyModel.UpdateSoftCurrency(value);
+            _gameplayView.UpdateSoftCurrency(_currencyModel.SoftCurrencyCounter);
+        }
     }
 }
