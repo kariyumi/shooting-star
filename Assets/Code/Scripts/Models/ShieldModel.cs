@@ -27,7 +27,11 @@ public class ShieldModel : MonoBehaviour
         yield return new WaitForSecondsRealtime((int) timer.TotalSeconds);
 
         ShieldCounter += 1;
-        Debug.Log("oi");
+    }
+
+    public void OnShieldUsed()
+    {
+        ShieldCounter -= 1;
     }
 
     public void OnBuyAcceleration()

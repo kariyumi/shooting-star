@@ -28,6 +28,17 @@ namespace Assets.Code.Scripts.Controllers.Abstract
         public virtual void OnGameOver()
         {
             StopAllCoroutines();
+            CleanContainer();
+        }
+
+        private void CleanContainer()
+        {
+            int childCount = _obstacleContainer.transform.childCount;
+
+            for (int i = childCount - 1; i >= 0; i--)
+            {
+                Destroy(_obstacleContainer.transform.GetChild(i).gameObject);
+            }
         }
 
         protected virtual IEnumerator SpawnStarCorroutine()

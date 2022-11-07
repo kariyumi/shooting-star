@@ -699,17 +699,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1624925131 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6025753249366726458, guid: 146c616c4bcaf450f884ca68844cf35b, type: 3}
-  m_PrefabInstance: {fileID: 6559825119283749706}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1940271548 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1568676604810516490, guid: c55190d5377354524a80132f64c63857, type: 3}
@@ -813,22 +802,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 839758311503837839, guid: 08bf3006b7518498aa044805a88d55a3, type: 3}
-      propertyPath: m_text
-      value: Let's write your name in the stars...
-      objectReference: {fileID: 0}
-    - target: {fileID: 839758311503837839, guid: 08bf3006b7518498aa044805a88d55a3, type: 3}
-      propertyPath: m_fontSize
-      value: 44.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1343806354662819669, guid: 08bf3006b7518498aa044805a88d55a3, type: 3}
-      propertyPath: m_fontSize
-      value: 72
-      objectReference: {fileID: 0}
-    - target: {fileID: 1343806354662819669, guid: 08bf3006b7518498aa044805a88d55a3, type: 3}
-      propertyPath: m_fontSizeMax
-      value: 72
-      objectReference: {fileID: 0}
     - target: {fileID: 1718507398637470073, guid: 08bf3006b7518498aa044805a88d55a3, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -917,10 +890,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameOverCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 1718507398637470076, guid: 08bf3006b7518498aa044805a88d55a3, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 08bf3006b7518498aa044805a88d55a3, type: 3}
 --- !u!1001 &6559825119283749706
@@ -933,10 +902,6 @@ PrefabInstance:
     - target: {fileID: 6559825119441906086, guid: 146c616c4bcaf450f884ca68844cf35b, type: 3}
       propertyPath: m_Name
       value: GameplayCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 6559825119441906086, guid: 146c616c4bcaf450f884ca68844cf35b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6559825119441906106, guid: 146c616c4bcaf450f884ca68844cf35b, type: 3}
       propertyPath: m_Pivot.x
@@ -1021,18 +986,6 @@ PrefabInstance:
     - target: {fileID: 6559825119441906106, guid: 146c616c4bcaf450f884ca68844cf35b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6559825119441906107, guid: 146c616c4bcaf450f884ca68844cf35b, type: 3}
-      propertyPath: _starCounterText
-      value: 
-      objectReference: {fileID: 1624925131}
-    - target: {fileID: 6559825119898245712, guid: 146c616c4bcaf450f884ca68844cf35b, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -0.21759033
-      objectReference: {fileID: 0}
-    - target: {fileID: 6725802352030878893, guid: 146c616c4bcaf450f884ca68844cf35b, type: 3}
-      propertyPath: m_Name
-      value: StarCounterText
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 146c616c4bcaf450f884ca68844cf35b, type: 3}
@@ -1133,7 +1086,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7073572281644278383, guid: 6d757e4257b234064ad3867ba240c4b1, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d757e4257b234064ad3867ba240c4b1, type: 3}
@@ -1144,6 +1097,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9014750473245770682, guid: c55190d5377354524a80132f64c63857, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014750473435630322, guid: c55190d5377354524a80132f64c63857, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 8.077637
+      objectReference: {fileID: 0}
     - target: {fileID: 9014750474568241089, guid: c55190d5377354524a80132f64c63857, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1231,6 +1192,10 @@ PrefabInstance:
     - target: {fileID: 9014750474568241101, guid: c55190d5377354524a80132f64c63857, type: 3}
       propertyPath: m_Name
       value: StarGarageCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014750474568241101, guid: c55190d5377354524a80132f64c63857, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c55190d5377354524a80132f64c63857, type: 3}

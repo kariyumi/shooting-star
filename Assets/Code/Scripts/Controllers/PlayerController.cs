@@ -30,6 +30,7 @@ namespace Assets.Code.Scripts.Controllers
         public void OnGameStart()
         {
             gameObject.SetActive(true);
+            gameObject.transform.position = new Vector2(0, 0);
         }
 
         public void MovePlayer(float horizontalInput, float verticalInput)

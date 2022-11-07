@@ -20,7 +20,7 @@ namespace Assets.Code.Scripts.Controllers
 
         private void Awake()
         {
-            _gameplayView.Initialize(_playerController.FireLaser, _playerController.ActivateShield, _playerController.MovePlayer);
+            _gameplayView.Initialize(_playerController.FireLaser, UseShield, _playerController.MovePlayer);
             _mainMenuView.Initialize(StartGame, Garage, Leaderboard);
             _gameOverMenuView.Initialize(StartGame, Garage, Leaderboard);
             _starGarageView.Initialize(BuySoftCurrency, BuyHardCurrency, BuyShield, AccelerateShield, MainMenu);
@@ -46,7 +46,7 @@ namespace Assets.Code.Scripts.Controllers
             _enemySpawnController.OnStartGame();
             _starSpawnController.OnStartGame();
             _playerController.OnGameStart();
-            _gameplayView.OnGameStart();
+            _gameplayView.OnGameStart(_shieldModel.ShieldCounter);
         }
 
         private void EndGame()
@@ -125,6 +125,13 @@ namespace Assets.Code.Scripts.Controllers
             _shieldModel.OnBuyShield();
 
             _starGarageView.OnBuyShield(_currencyModel.SoftCurrencyCounter, _shieldModel.Timer);
+        }
+
+        public void UseShield()
+        {
+            _playerController.ActivateShield();
+            _shieldModel.OnShieldUsed();
+            _gameplayView.UpdateShieldCount(_shieldModel.ShieldCounter);
         }
 
         public void AccelerateShield()
