@@ -52,7 +52,7 @@ namespace Assets.Code.Scripts.Views
             _shieldCount.text = value.ToString();
         }
 
-        public void Terminate()
+        public void OnDestroy()
         {
             _fireButton.onClick.RemoveAllListeners();
             _shieldButton.onClick.RemoveAllListeners();

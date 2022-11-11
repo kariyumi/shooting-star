@@ -17,7 +17,7 @@ namespace Assets.Code.Scripts.Views
             _leaderboardButton.onClick.AddListener(onLeaderboardButtonClick.Invoke);
         }
 
-        public void Terminate()
+        public void OnDestroy()
         {
             _playButton.onClick.RemoveAllListeners();
             _garageButton.onClick.RemoveAllListeners();

@@ -17,6 +17,7 @@ namespace Assets.Code.Scripts.Controllers
         [SerializeField] MainMenuView _mainMenuView;
         [SerializeField] GameOverMenuView _gameOverMenuView;
         [SerializeField] StarGarageView _starGarageView;
+        [SerializeField] LeaderboardView _leaderboardView;
 
         [SerializeField] CurrencyModel _currencyModel;
         [SerializeField] ScoreModel _scoreModel;
@@ -30,12 +31,13 @@ namespace Assets.Code.Scripts.Controllers
             _gameplayView.Initialize(_playerController.FireLaser, UseShield, _playerController.MovePlayer);
             _starGarageView.Initialize(AddSoftCurrency, AddHardCurrency, BuyShield, AccelerateShield, MainMenu);
             _gameOverMenuView.Initialize(StartGame, GarageMenu, LeaderboardMenu);
+            _leaderboardView.Initialize(MainMenu);
 
             _enemySpawnController.Initialize(UpdateScore);
             _starSpawnController.Initialize(CountDespawnedStar);
             _playerController.Initialize(EndGame);
 
-            _authenticationController.Authenticate();
+            Authentication();
         }
 
         private void GetPlayFabPlayerData()
@@ -59,6 +61,12 @@ namespace Assets.Code.Scripts.Controllers
             MainMenu();
         }
 
+        private void Authentication()
+        {
+            SetViewActive(Views.Authentication);
+            _authenticationController.Authenticate();
+        }
+
         private void MainMenu()
         {
             SetViewActive(Views.MainMenu);
@@ -71,19 +79,20 @@ namespace Assets.Code.Scripts.Controllers
 
         private void GarageMenu()
         {
+            SetViewActive(Views.StarGarage);
+
             _starGarageView.OnActive(
                 _currencyModel.SoftCurrencyCounter,
                 _currencyModel.HardCurrencyCounter,
                 _shieldModel.ShieldCounter,
                 _shieldModel.Timer
                 );
-
-            SetViewActive(Views.StarGarage);
         }
 
         private void LeaderboardMenu()
         {
-
+            PlayFabPlayerData.RequestLeaderBoard(() => _leaderboardView.GenerateLeaderboardTable(PlayFabPlayerData.GetLeaderboard()));
+            SetViewActive(Views.Leaderboard);
         }
 
         private void GameOver()
@@ -104,7 +113,7 @@ namespace Assets.Code.Scripts.Controllers
         private void EndGame()
         {
             _currencyModel.AddStar(_starSpawnController.StarDespawnedCounter);
-            //salvar score
+            PlayFabPlayerData.SubmitScore(_scoreModel.Score);
 
             _enemySpawnController.OnGameOver();
             _starSpawnController.OnGameOver();
@@ -190,6 +199,9 @@ namespace Assets.Code.Scripts.Controllers
                 case Views.StarGarage:
                     _starGarageView.gameObject.SetActive(true);
                     break;
+                case Views.Leaderboard:
+                    _leaderboardView.gameObject.SetActive(true);
+                    break;
             }
         }
 
@@ -200,6 +212,7 @@ namespace Assets.Code.Scripts.Controllers
             _gameplayView.gameObject.SetActive(false);
             _gameOverMenuView.gameObject.SetActive(false);
             _starGarageView.gameObject.SetActive(false);
+            _leaderboardView.gameObject.SetActive(false);
         }
     }
 
@@ -209,6 +222,7 @@ namespace Assets.Code.Scripts.Controllers
         MainMenu,
         GamePlay,
         GameOver,
-        StarGarage
+        StarGarage,
+        Leaderboard
     }
 }

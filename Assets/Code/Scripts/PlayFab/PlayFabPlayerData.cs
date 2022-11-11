@@ -14,6 +14,7 @@ namespace Assets.Code.Scripts.PlayFab
         private static Dictionary<string, string> _playerData = new Dictionary<string, string>();
         private static Dictionary<string, int> _virtualCurrency = new Dictionary<string, int>();
         private static List<ItemInstance> _playerInventory = new List<ItemInstance>();
+        private static List<PlayerLeaderboardEntry> _leaderboard = new List<PlayerLeaderboardEntry>();
 
         public const string LAST_SHIELD_BUY_KEY = "LastShieldBuy";
         public const string LAST_SHIELD_RETRIEVED_KEY = "LastShieldRetrieved";
@@ -22,6 +23,7 @@ namespace Assets.Code.Scripts.PlayFab
         public const string SHIELD_ID = "Shield";
         public const string SHIELD_INSTANCE_ID = "826776869DE7E2F1";
         public const string STORE_ID = "Powers";
+        public const string LEADERBOARD_ID = "HighScore";
 
         #region UserData
         public static void GetUserData(Action callback = null)
@@ -228,6 +230,55 @@ namespace Assets.Code.Scripts.PlayFab
 
             return amount;
         }
+        #endregion
+
+        #region Leaderboard
+
+        public static void SubmitScore(int playerScore)
+        {
+            var request = new UpdatePlayerStatisticsRequest
+            {
+                Statistics = new List<StatisticUpdate>
+                {
+                    new StatisticUpdate
+                    {
+                        StatisticName = LEADERBOARD_ID,
+                        Value = playerScore
+                    }
+                }
+            };
+
+            PlayFabClientAPI.UpdatePlayerStatistics(request, result =>
+            {
+                PlayFabBridge.RaiseCallbackSuccess(string.Empty, PlayFabAPIMethods.UpdateUserStatistics, MessageDisplayStyle.none);
+            }, PlayFabBridge.PlayFabErrorCallback);
+        }
+
+        public static void RequestLeaderBoard(Action callback = null)
+        {
+            var leaderboard = new List<PlayerLeaderboardEntry>();
+
+            var request = new GetLeaderboardRequest
+            {
+                StatisticName = LEADERBOARD_ID,
+                StartPosition = 0,
+                MaxResultsCount = 10
+            };
+
+            PlayFabClientAPI.GetLeaderboard(request, result =>
+            {
+                _leaderboard = result.Leaderboard;
+                callback?.Invoke();
+
+                PlayFabBridge.RaiseCallbackSuccess(string.Empty, PlayFabAPIMethods.UpdateUserStatistics, MessageDisplayStyle.none);
+            }, PlayFabBridge.PlayFabErrorCallback);
+        }
+
+        public static List<PlayerLeaderboardEntry> GetLeaderboard()
+        {
+            return _leaderboard;
+        }
+
         #endregion
     }
 }

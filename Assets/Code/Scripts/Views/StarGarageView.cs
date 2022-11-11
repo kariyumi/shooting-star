@@ -35,7 +35,7 @@ public class StarGarageView : MonoBehaviour
         UpdateSoftCurrecy(softCurrency);
         UpdateHardCurrecy(hardCurrency);
         UpdateShieldCounter(shieldCounter);
-        UpdateTimer(timer);
+        StartCoroutine(UpdateTimer(timer));
     }
 
     IEnumerator UpdateTimer(TimeSpan timer)
@@ -81,8 +81,13 @@ public class StarGarageView : MonoBehaviour
         _shieldCounter.text = value.ToString();
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         StopAllCoroutines();
+        _buySoftCurrencyButton.onClick.RemoveAllListeners();
+        _buyHardCurrencyButton.onClick.RemoveAllListeners();
+        _buyShieldButton.onClick.RemoveAllListeners();
+        _accelerateShieldButton.onClick.RemoveAllListeners();
+        _returnButton.onClick.RemoveAllListeners();
     }
 }

@@ -25,7 +25,7 @@ namespace Assets.Code.Scripts.Views
             _scoreText.text = finalScore.ToString();
         }
 
-        public void Terminate()
+        public void OnDestroy()
         {
             _playButton.onClick.RemoveAllListeners();
             _garageButton.onClick.RemoveAllListeners();
