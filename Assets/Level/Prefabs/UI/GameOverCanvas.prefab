@@ -467,7 +467,6 @@ GameObject:
   - component: {fileID: 1718507398637470072}
   - component: {fileID: 1718507398637470079}
   - component: {fileID: 1718507398637470078}
-  - component: {fileID: 1718507398637470077}
   - component: {fileID: 1867272708108799360}
   m_Layer: 5
   m_Name: GameOverCanvas
@@ -475,7 +474,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1718507398637470073
 RectTransform:
   m_ObjectHideFlags: 0
@@ -564,21 +563,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1718507398637470077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718507398637470076}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6dd7b35a84cb54c67ab1b3bd66c37a57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playButton: {fileID: 1718507398708280064}
-  _garageButton: {fileID: 1718507398116131532}
-  _leaderboardButton: {fileID: 1718507398594229255}
 --- !u!114 &1867272708108799360
 MonoBehaviour:
   m_ObjectHideFlags: 0

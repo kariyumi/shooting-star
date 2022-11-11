@@ -5,6 +5,8 @@ namespace Assets.Code.Scripts.Controllers
 {
     public class GameController : MonoBehaviour
     {
+        [SerializeField] AuthenticationController _authenticationController;
+
         [SerializeField] PlayerController _playerController;
         [SerializeField] EnemySpawnController _enemySpawnController;
         [SerializeField] StarSpawnController _starSpawnController;
@@ -20,9 +22,11 @@ namespace Assets.Code.Scripts.Controllers
 
         private void Awake()
         {
+            _authenticationController.Initialize(MainMenu);
+
             _gameplayView.Initialize(_playerController.FireLaser, UseShield, _playerController.MovePlayer);
-            _mainMenuView.Initialize(StartGame, Garage, Leaderboard);
-            _gameOverMenuView.Initialize(StartGame, Garage, Leaderboard);
+            _mainMenuView.Initialize(StartGame, GarageMenu, LeaderboardMenu);
+            _gameOverMenuView.Initialize(StartGame, GarageMenu, LeaderboardMenu);
             _starGarageView.Initialize(BuySoftCurrency, BuyHardCurrency, BuyShield, AccelerateShield, MainMenu);
 
             _enemySpawnController.Initialize(UpdateScore);
@@ -33,7 +37,7 @@ namespace Assets.Code.Scripts.Controllers
             _currencyModel.Initialize();
             _shieldModel.Initialize();
 
-            MainMenu();
+            _authenticationController.Authenticate();
         }
 
         private void StartGame()
@@ -64,13 +68,14 @@ namespace Assets.Code.Scripts.Controllers
 
         private void MainMenu()
         {
+            _authenticationController.gameObject.SetActive(false);
             _mainMenuView.gameObject.SetActive(true);
             _gameplayView.gameObject.SetActive(false);
             _gameOverMenuView.gameObject.SetActive(false);
             _starGarageView.gameObject.SetActive(false);
         }
 
-        private void Garage()
+        private void GarageMenu()
         {
             _mainMenuView.gameObject.SetActive(false);
             _gameplayView.gameObject.SetActive(false);
@@ -85,7 +90,7 @@ namespace Assets.Code.Scripts.Controllers
                 );
         }
 
-        private void Leaderboard()
+        private void LeaderboardMenu()
         {
 
         }
