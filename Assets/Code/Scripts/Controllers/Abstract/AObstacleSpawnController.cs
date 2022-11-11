@@ -11,7 +11,7 @@ namespace Assets.Code.Scripts.Controllers.Abstract
 
         protected float _xSpawnRange = 9f;
         protected float _ySpawn = -8f;
-        protected float _spawnRate = 10f;
+        protected float _spawnRate = 7f;
 
         protected Action<int> _onDespawn;
 

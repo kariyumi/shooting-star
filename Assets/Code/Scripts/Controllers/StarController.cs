@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Assets.Code.Scripts.Controllers.Abstract;
 

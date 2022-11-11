@@ -9,11 +9,11 @@ namespace Assets.Code.Scripts.Controllers
 {
     public class AuthenticationController : MonoBehaviour
     {
-        public bool useDevLogin = false;
-        public Transform developerLogin;
+        public bool UseDevLogin = false;
+        public Transform DeveloperLogin;
 
-        public Button signInWithDeviceID;
-        public TMP_Text DeviceIdDisplay;
+        [SerializeField] Button SignInWithDeviceID;
+        [SerializeField] TMP_Text DeviceIdDisplay;
 
         private Action _onLoginSuccess;
 
@@ -34,7 +34,7 @@ namespace Assets.Code.Scripts.Controllers
 
         public void Authenticate()
         {
-            if (useDevLogin)
+            if (UseDevLogin)
             {
                 EnableDeveloperMode();
             }
@@ -66,26 +66,26 @@ namespace Assets.Code.Scripts.Controllers
         public void EnableDeveloperMode()
         {
             DisableUserSelectMode();
-            developerLogin.gameObject.SetActive(true);
+            DeveloperLogin.gameObject.SetActive(true);
         }
 
         public void DisableDeveloperMode()
         {
-            developerLogin.gameObject.SetActive(false);
+            DeveloperLogin.gameObject.SetActive(false);
         }
 
         public void EnableUserSelectMode()
         {
             DisableDeveloperMode();
-            signInWithDeviceID.gameObject.SetActive(true);
+            SignInWithDeviceID.gameObject.SetActive(true);
 
-            signInWithDeviceID.onClick.RemoveAllListeners();
-            signInWithDeviceID.onClick.AddListener(() => SigninWithDeviceID(true));
+            SignInWithDeviceID.onClick.RemoveAllListeners();
+            SignInWithDeviceID.onClick.AddListener(() => SigninWithDeviceID(true));
         }
 
         public void DisableUserSelectMode()
         {
-            signInWithDeviceID.gameObject.SetActive(false);
+            SignInWithDeviceID.gameObject.SetActive(false);
         }
 
         public void EnableAutoMode()

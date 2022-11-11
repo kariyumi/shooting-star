@@ -1,16 +1,19 @@
 using UnityEngine;
 
-public class ScoreModel : MonoBehaviour
+namespace Assets.Code.Scripts.Models
 {
-    public int Score { get; private set; }
-
-    public void UpdateScore(int value)
+    public class ScoreModel : MonoBehaviour
     {
-        Score += value;
-    }
+        public int Score { get; private set; }
 
-    public void ClearScore()
-    {
-        Score = 0;
+        public void UpdateScore(int value)
+        {
+            Score += value;
+        }
+
+        public void ClearScore()
+        {
+            Score = 0;
+        }
     }
 }

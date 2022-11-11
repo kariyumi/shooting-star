@@ -4,90 +4,93 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StarGarageView : MonoBehaviour
+namespace Assets.Code.Scripts.Views
 {
-    [SerializeField] TMP_Text _softCurrencyCount;
-    [SerializeField] TMP_Text _hardCurrencyCount;
-    [SerializeField] Button _buySoftCurrencyButton;
-    [SerializeField] Button _buyHardCurrencyButton;
-    [SerializeField] TMP_Text _shieldCounter;
-    [SerializeField] TMP_Text _shieldTimer;
-    [SerializeField] Button _buyShieldButton;
-    [SerializeField] Button _accelerateShieldButton;
-    [SerializeField] Button _returnButton;
-
-    public void Initialize(Action onBuySoftCurrency,
-        Action onBuyHardCurrency,
-        Action onBuyShieldButton,
-        Action onAccelerateShield,
-        Action onReturnButton
-        )
+    public class StarGarageView : MonoBehaviour
     {
-        _buySoftCurrencyButton.onClick.AddListener(onBuySoftCurrency.Invoke);
-        _buyHardCurrencyButton.onClick.AddListener(onBuyHardCurrency.Invoke);
-        _buyShieldButton.onClick.AddListener(onBuyShieldButton.Invoke);
-        _accelerateShieldButton.onClick.AddListener(onAccelerateShield.Invoke);
-        _returnButton.onClick.AddListener(onReturnButton.Invoke);
-    }
+        [SerializeField] TMP_Text _softCurrencyCount;
+        [SerializeField] TMP_Text _hardCurrencyCount;
+        [SerializeField] Button _buySoftCurrencyButton;
+        [SerializeField] Button _buyHardCurrencyButton;
+        [SerializeField] TMP_Text _shieldCounter;
+        [SerializeField] TMP_Text _shieldTimer;
+        [SerializeField] Button _buyShieldButton;
+        [SerializeField] Button _accelerateShieldButton;
+        [SerializeField] Button _returnButton;
 
-    public void OnActive(int softCurrency, int hardCurrency, int shieldCounter, TimeSpan timer)
-    {
-        UpdateSoftCurrecy(softCurrency);
-        UpdateHardCurrecy(hardCurrency);
-        UpdateShieldCounter(shieldCounter);
-        StartCoroutine(UpdateTimer(timer));
-    }
-
-    IEnumerator UpdateTimer(TimeSpan timer)
-    {
-        while (timer >= TimeSpan.Zero)
+        public void Initialize(Action onBuySoftCurrency,
+            Action onBuyHardCurrency,
+            Action onBuyShieldButton,
+            Action onAccelerateShield,
+            Action onReturnButton
+            )
         {
-            _shieldTimer.text = "TIME TO BE READY: " + timer.ToString();
-
-            yield return new WaitForSecondsRealtime(1);
-
-            timer -= new TimeSpan(0,0,1);
+            _buySoftCurrencyButton.onClick.AddListener(onBuySoftCurrency.Invoke);
+            _buyHardCurrencyButton.onClick.AddListener(onBuyHardCurrency.Invoke);
+            _buyShieldButton.onClick.AddListener(onBuyShieldButton.Invoke);
+            _accelerateShieldButton.onClick.AddListener(onAccelerateShield.Invoke);
+            _returnButton.onClick.AddListener(onReturnButton.Invoke);
         }
 
-        _shieldTimer.text = "TIME TO BE READY: " + TimeSpan.Zero;
-        UpdateShieldCounter(Int32.Parse(_shieldCounter.text) + 1);
-    }
+        public void OnActive(int softCurrency, int hardCurrency, int shieldCounter, TimeSpan timer)
+        {
+            UpdateSoftCurrecy(softCurrency);
+            UpdateHardCurrecy(hardCurrency);
+            UpdateShieldCounter(shieldCounter);
+            StartCoroutine(UpdateTimer(timer));
+        }
 
-    public void OnBuyShield(int softCurrency, TimeSpan timer)
-    {
-        StartCoroutine(UpdateTimer(timer));
-        UpdateSoftCurrecy(softCurrency);
-    }
+        IEnumerator UpdateTimer(TimeSpan timer)
+        {
+            while (timer >= TimeSpan.Zero)
+            {
+                _shieldTimer.text = "TIME TO BE READY: " + timer.ToString();
 
-    public void OnAccelerateShield(int hardCurrency, TimeSpan timer)
-    {
-        StopAllCoroutines();
-        StartCoroutine(UpdateTimer(timer));
-        UpdateHardCurrecy(hardCurrency);
-    }
+                yield return new WaitForSecondsRealtime(1);
 
-    public void UpdateSoftCurrecy(int value)
-    {
-        _softCurrencyCount.text = value.ToString();
-    }
+                timer -= new TimeSpan(0, 0, 1);
+            }
 
-    public void UpdateHardCurrecy(int value)
-    {
-        _hardCurrencyCount.text = value.ToString();
-    }
+            _shieldTimer.text = "TIME TO BE READY: " + TimeSpan.Zero;
+            UpdateShieldCounter(Int32.Parse(_shieldCounter.text) + 1);
+        }
 
-    public void UpdateShieldCounter(int value)
-    {
-        _shieldCounter.text = value.ToString();
-    }
+        public void OnBuyShield(int softCurrency, TimeSpan timer)
+        {
+            StartCoroutine(UpdateTimer(timer));
+            UpdateSoftCurrecy(softCurrency);
+        }
 
-    private void OnDestroy()
-    {
-        StopAllCoroutines();
-        _buySoftCurrencyButton.onClick.RemoveAllListeners();
-        _buyHardCurrencyButton.onClick.RemoveAllListeners();
-        _buyShieldButton.onClick.RemoveAllListeners();
-        _accelerateShieldButton.onClick.RemoveAllListeners();
-        _returnButton.onClick.RemoveAllListeners();
+        public void OnAccelerateShield(int hardCurrency, TimeSpan timer)
+        {
+            StopAllCoroutines();
+            StartCoroutine(UpdateTimer(timer));
+            UpdateHardCurrecy(hardCurrency);
+        }
+
+        public void UpdateSoftCurrecy(int value)
+        {
+            _softCurrencyCount.text = value.ToString();
+        }
+
+        public void UpdateHardCurrecy(int value)
+        {
+            _hardCurrencyCount.text = value.ToString();
+        }
+
+        public void UpdateShieldCounter(int value)
+        {
+            _shieldCounter.text = value.ToString();
+        }
+
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
+            _buySoftCurrencyButton.onClick.RemoveAllListeners();
+            _buyHardCurrencyButton.onClick.RemoveAllListeners();
+            _buyShieldButton.onClick.RemoveAllListeners();
+            _accelerateShieldButton.onClick.RemoveAllListeners();
+            _returnButton.onClick.RemoveAllListeners();
+        }
     }
 }
