@@ -24,6 +24,7 @@ namespace Assets.Code.Scripts.Views
         public void OnGameStart(int shieldCount)
         {
             UpdateScore(0);
+            UpdateSoftCurrency(0);
             UpdateShieldCount(shieldCount);
         }
 

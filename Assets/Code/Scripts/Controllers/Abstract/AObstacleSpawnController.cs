@@ -17,7 +17,10 @@ namespace Assets.Code.Scripts.Controllers.Abstract
 
         public virtual void Initialize(Action<int> onDespawn)
         {
-            _onDespawn = onDespawn;
+            if(onDespawn != null)
+            {
+                _onDespawn = onDespawn;
+            }
         }
 
         public virtual void OnStartGame()

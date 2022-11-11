@@ -1,3 +1,5 @@
+using System;
+using Assets.Code.Scripts.PlayFab;
 using Assets.Code.Scripts.Views;
 using UnityEngine;
 
@@ -22,30 +24,76 @@ namespace Assets.Code.Scripts.Controllers
 
         private void Awake()
         {
-            _authenticationController.Initialize(MainMenu);
+            _authenticationController.Initialize(GetPlayFabPlayerData);
 
-            _gameplayView.Initialize(_playerController.FireLaser, UseShield, _playerController.MovePlayer);
             _mainMenuView.Initialize(StartGame, GarageMenu, LeaderboardMenu);
+            _gameplayView.Initialize(_playerController.FireLaser, UseShield, _playerController.MovePlayer);
+            _starGarageView.Initialize(AddSoftCurrency, AddHardCurrency, BuyShield, AccelerateShield, MainMenu);
             _gameOverMenuView.Initialize(StartGame, GarageMenu, LeaderboardMenu);
-            _starGarageView.Initialize(BuySoftCurrency, BuyHardCurrency, BuyShield, AccelerateShield, MainMenu);
 
             _enemySpawnController.Initialize(UpdateScore);
-            _starSpawnController.Initialize(UpdateSoftCurrency);
+            _starSpawnController.Initialize(CountDespawnedStar);
             _playerController.Initialize(EndGame);
-
-            _scoreModel.Initialize();
-            _currencyModel.Initialize();
-            _shieldModel.Initialize();
 
             _authenticationController.Authenticate();
         }
 
+        private void GetPlayFabPlayerData()
+        {
+            PlayFabPlayerData.GetUserInventory(() =>
+            {
+                _currencyModel.SoftCurrencyCounter = PlayFabPlayerData.GetCurrencyAmount(PlayFabPlayerData.SOFT_CURRENCY_KEY);
+                _currencyModel.HardCurrencyCounter = PlayFabPlayerData.GetCurrencyAmount(PlayFabPlayerData.HARD_CURRENCY_KEY);
+                _shieldModel.ShieldCounter = PlayFabPlayerData.GetItemAmount(PlayFabPlayerData.SHIELD_ID);
+            });
+
+
+            PlayFabPlayerData.GetUserData(() =>
+            {
+                string lastShieldRetrieve = PlayFabPlayerData.GetUserData(PlayFabPlayerData.LAST_SHIELD_RETRIEVED_KEY);
+                _shieldModel.ShieldRetrieved = lastShieldRetrieve == "" ? true : bool.Parse(lastShieldRetrieve);
+                string lastShieldBuy = PlayFabPlayerData.GetUserData(PlayFabPlayerData.LAST_SHIELD_BUY_KEY);
+                _shieldModel.ReadyTime = lastShieldBuy == "" ? DateTime.Now : Convert.ToDateTime(lastShieldBuy);
+            });
+
+            MainMenu();
+        }
+
+        private void MainMenu()
+        {
+            SetViewActive(Views.MainMenu);
+        }
+
+        private void GamePlay()
+        {
+            SetViewActive(Views.GamePlay);
+        }
+
+        private void GarageMenu()
+        {
+            _starGarageView.OnActive(
+                _currencyModel.SoftCurrencyCounter,
+                _currencyModel.HardCurrencyCounter,
+                _shieldModel.ShieldCounter,
+                _shieldModel.Timer
+                );
+
+            SetViewActive(Views.StarGarage);
+        }
+
+        private void LeaderboardMenu()
+        {
+
+        }
+
+        private void GameOver()
+        {
+            SetViewActive(Views.GameOver);
+        }
+
         private void StartGame()
         {
-            _mainMenuView.gameObject.SetActive(false);
-            _gameplayView.gameObject.SetActive(true);
-            _gameOverMenuView.gameObject.SetActive(false);
-            _starGarageView.gameObject.SetActive(false);
+            GamePlay();
 
             _enemySpawnController.OnStartGame();
             _starSpawnController.OnStartGame();
@@ -55,44 +103,15 @@ namespace Assets.Code.Scripts.Controllers
 
         private void EndGame()
         {
+            _currencyModel.AddStar(_starSpawnController.StarDespawnedCounter);
+            //salvar score
+
             _enemySpawnController.OnGameOver();
             _starSpawnController.OnGameOver();
             _gameOverMenuView.OnGameOver(_scoreModel.Score);
             _scoreModel.ClearScore();
 
-            _gameOverMenuView.gameObject.SetActive(true);
-            _mainMenuView.gameObject.SetActive(false);
-            _gameplayView.gameObject.SetActive(false);
-            _starGarageView.gameObject.SetActive(false);
-        }
-
-        private void MainMenu()
-        {
-            _authenticationController.gameObject.SetActive(false);
-            _mainMenuView.gameObject.SetActive(true);
-            _gameplayView.gameObject.SetActive(false);
-            _gameOverMenuView.gameObject.SetActive(false);
-            _starGarageView.gameObject.SetActive(false);
-        }
-
-        private void GarageMenu()
-        {
-            _mainMenuView.gameObject.SetActive(false);
-            _gameplayView.gameObject.SetActive(false);
-            _gameOverMenuView.gameObject.SetActive(false);
-            _starGarageView.gameObject.SetActive(true);
-
-            _starGarageView.OnActive(
-                _currencyModel.SoftCurrencyCounter,
-                _currencyModel.HardCurrencyCounter,
-                _shieldModel.ShieldCounter,
-                _shieldModel.Timer
-                );
-        }
-
-        private void LeaderboardMenu()
-        {
-
+            GameOver();
         }
 
         private void UpdateScore(int value)
@@ -101,35 +120,27 @@ namespace Assets.Code.Scripts.Controllers
             _gameplayView.UpdateScore(_scoreModel.Score);
         }
 
-        private void UpdateSoftCurrency(int value)
+        private void AddSoftCurrency()
         {
-            _currencyModel.UpdateSoftCurrency(value);
-            _gameplayView.UpdateSoftCurrency(_currencyModel.SoftCurrencyCounter);
+            _currencyModel.AddStar(10, () => _starGarageView.UpdateSoftCurrecy(_currencyModel.SoftCurrencyCounter));
         }
 
-        private void BuySoftCurrency()
+        private void AddHardCurrency()
         {
-            _currencyModel.UpdateSoftCurrency(10);
-            _starGarageView.UpdateSoftCurrecy(_currencyModel.SoftCurrencyCounter);
-        }
-
-        private void BuyHardCurrency()
-        {
-            _currencyModel.UpdateHardCurrency(10);
-            _starGarageView.UpdateHardCurrecy(_currencyModel.HardCurrencyCounter);
+            _currencyModel.AddRedStar(10, () => _starGarageView.UpdateHardCurrecy(_currencyModel.HardCurrencyCounter));
         }
 
         public void BuyShield()
         {
-            if (_currencyModel.SoftCurrencyCounter / _shieldModel.ShieldPrice < 1)
+            if (_currencyModel.SoftCurrencyCounter / _shieldModel.ShieldPrice < 1 ||
+                _shieldModel.Timer != TimeSpan.Zero)
             {
                 return;
             }
 
-            _currencyModel.UpdateSoftCurrency(-_shieldModel.ShieldPrice);
+            _currencyModel.SubtractStar(_shieldModel.ShieldPrice, () =>
+                _starGarageView.OnBuyShield(_currencyModel.SoftCurrencyCounter, _shieldModel.Timer));
             _shieldModel.OnBuyShield();
-
-            _starGarageView.OnBuyShield(_currencyModel.SoftCurrencyCounter, _shieldModel.Timer);
         }
 
         public void UseShield()
@@ -142,17 +153,62 @@ namespace Assets.Code.Scripts.Controllers
         public void AccelerateShield()
         {
             if (_currencyModel.HardCurrencyCounter / _shieldModel.AccelerationPrice < 1 ||
-                _shieldModel.Timer == System.TimeSpan.Zero)
+                _shieldModel.Timer == TimeSpan.Zero)
             {
                 return;
             }
 
-            _currencyModel.UpdateHardCurrency(-_shieldModel.AccelerationPrice);
+            _currencyModel.SubtractRedStar(_shieldModel.AccelerationPrice, () =>
+                _starGarageView.OnAccelerateShield(_currencyModel.HardCurrencyCounter, _shieldModel.Timer));
             _shieldModel.OnBuyAcceleration();
-
-            _starGarageView.OnAccelerateShield(_currencyModel.HardCurrencyCounter, _shieldModel.Timer);
         }
 
+        public void CountDespawnedStar(int value)
+        {
+            _starSpawnController.CountDespawnedStar(value);
+            _gameplayView.UpdateSoftCurrency(_starSpawnController.StarDespawnedCounter);
+        }
 
+        public void SetViewActive(Views view)
+        {
+            SetAllViewsInactive();
+
+            switch (view)
+            {
+                case Views.Authentication:
+                    _authenticationController.gameObject.SetActive(true);
+                    break;
+                case Views.MainMenu:
+                    _mainMenuView.gameObject.SetActive(true);
+                    break;
+                case Views.GamePlay:
+                    _gameplayView.gameObject.SetActive(true);
+                    break;
+                case Views.GameOver:
+                    _gameOverMenuView.gameObject.SetActive(true);
+                    break;
+                case Views.StarGarage:
+                    _starGarageView.gameObject.SetActive(true);
+                    break;
+            }
+        }
+
+        public void SetAllViewsInactive()
+        {
+            _authenticationController.gameObject.SetActive(false);
+            _mainMenuView.gameObject.SetActive(false);
+            _gameplayView.gameObject.SetActive(false);
+            _gameOverMenuView.gameObject.SetActive(false);
+            _starGarageView.gameObject.SetActive(false);
+        }
+    }
+
+    public enum Views
+    {
+        Authentication,
+        MainMenu,
+        GamePlay,
+        GameOver,
+        StarGarage
     }
 }

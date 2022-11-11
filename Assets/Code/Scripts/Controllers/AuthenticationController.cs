@@ -17,7 +17,6 @@ namespace Assets.Code.Scripts.Controllers
 
         private Action _onLoginSuccess;
 
-        #region Monobehaviour Methods
         public void Initialize(Action onLoginSuccess)
         {
             PlayFabAuthentication.OnLoginFail += HandleOnLoginFail;
@@ -63,9 +62,7 @@ namespace Assets.Code.Scripts.Controllers
                 }
             }
         }
-        #endregion
 
-        #region UI Control
         public void EnableDeveloperMode()
         {
             DisableUserSelectMode();
@@ -96,9 +93,7 @@ namespace Assets.Code.Scripts.Controllers
             DisableDeveloperMode();
             DisableUserSelectMode();
         }
-        #endregion
 
-        #region start login methods &
         void SigninWithDeviceID(bool createAccount = false)
         {
             UnityAction accountNotFoundCallback = EnableUserSelectMode;
@@ -119,6 +114,5 @@ namespace Assets.Code.Scripts.Controllers
             Debug.Log(message);
             EnableUserSelectMode();
         }
-        #endregion
     }
 }

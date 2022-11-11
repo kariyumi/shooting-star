@@ -1,4 +1,7 @@
 ﻿
+using PlayFab;
+using PlayFab.ClientModels;
+
 namespace Assets.Code.Scripts.PlayFab
 {
     public static class PlayFabBridge
@@ -19,6 +22,19 @@ namespace Assets.Code.Scripts.PlayFab
         {
             if (OnPlayFabCallbackError != null)
                 OnPlayFabCallbackError(details, method, style);
+        }
+
+        public static void PlayFabErrorCallback(PlayFabError error)
+        {
+            if (OnPlayFabCallbackError != null)
+                OnPlayFabCallbackError(error.ErrorMessage, PlayFabAPIMethods.Generic, MessageDisplayStyle.error);
+        }
+
+        public static bool VerifyErrorFreeCloudScriptResult(ExecuteCloudScriptResult result)
+        {
+            if (result.Error != null)
+                OnPlayFabCallbackError(string.Format("{0}: ERROR: [{1}] -- {2}", result.FunctionName, result.Error.Error, result.Error.Message), PlayFabAPIMethods.ExecuteCloudScript, MessageDisplayStyle.error);
+            return result.Error == null;
         }
     }
 

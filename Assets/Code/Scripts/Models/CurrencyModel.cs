@@ -1,23 +1,33 @@
 using UnityEngine;
+using Assets.Code.Scripts.PlayFab;
+using System;
 
 public class CurrencyModel : MonoBehaviour
 {
-    public int SoftCurrencyCounter { get; private set; }
-    public int HardCurrencyCounter { get; private set; }
+    public int SoftCurrencyCounter;
+    public int HardCurrencyCounter;
 
-    public void Initialize()
+    public void AddStar(int value, Action callback = null)
     {
-        SoftCurrencyCounter = 0;
-        HardCurrencyCounter = 0;
-    }
-
-    public void UpdateSoftCurrency(int value)
-    {
+        PlayFabPlayerData.AddStarForPlayer(value, callback);
         SoftCurrencyCounter += value;
     }
 
-    public void UpdateHardCurrency(int value)
+    public void AddRedStar(int value, Action callback = null)
     {
+        PlayFabPlayerData.AddRedStarForPlayer(value, callback);
         HardCurrencyCounter += value;
+    }
+
+    public void SubtractStar(int value, Action callback = null)
+    {
+        PlayFabPlayerData.SubtractStarFromPlayer(value, callback);
+        SoftCurrencyCounter -= value;
+    }
+
+    public void SubtractRedStar(int value, Action callback = null)
+    {
+        PlayFabPlayerData.SubtractRedStarFromPlayer(value, callback);
+        HardCurrencyCounter -= value;
     }
 }
