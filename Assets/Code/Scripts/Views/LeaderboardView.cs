@@ -36,7 +36,7 @@ namespace Assets.Code.Scripts.Views
 
                 var leaderboardEntry = leaderboard[i];
 
-                entry.Find("PositionText").GetComponent<TMP_Text>().text = leaderboardEntry.Position.ToString();
+                entry.Find("PositionText").GetComponent<TMP_Text>().text = (leaderboardEntry.Position + 1).ToString();
                 entry.Find("NameText").GetComponent<TMP_Text>().text = leaderboardEntry.PlayFabId.ToString();
                 entry.Find("PointsText").GetComponent<TMP_Text>().text = leaderboardEntry.StatValue.ToString();
             }
