@@ -18,6 +18,8 @@ namespace Assets.Code.Scripts.Views
         [SerializeField] Button _accelerateShieldButton;
         [SerializeField] Button _returnButton;
 
+        private bool _shouldUpdateShieldCounter = false;
+
         public void Initialize(Action onBuySoftCurrency,
             Action onBuyHardCurrency,
             Action onBuyShieldButton,
@@ -42,6 +44,11 @@ namespace Assets.Code.Scripts.Views
 
         IEnumerator UpdateTimer(TimeSpan timer)
         {
+            if (timer > TimeSpan.Zero)
+            {
+                _shouldUpdateShieldCounter = true;
+            }
+
             while (timer >= TimeSpan.Zero)
             {
                 _shieldTimer.text = "TIME TO BE READY: " + timer.ToString();
@@ -52,7 +59,12 @@ namespace Assets.Code.Scripts.Views
             }
 
             _shieldTimer.text = "TIME TO BE READY: " + TimeSpan.Zero;
-            UpdateShieldCounter(Int32.Parse(_shieldCounter.text) + 1);
+
+            if (_shouldUpdateShieldCounter)
+            {
+                UpdateShieldCounter(Int32.Parse(_shieldCounter.text) + 1);
+                _shouldUpdateShieldCounter = false;
+            }
         }
 
         public void OnBuyShield(int softCurrency, TimeSpan timer)
